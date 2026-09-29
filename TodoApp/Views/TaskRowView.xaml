@@ -1,0 +1,27 @@
+<UserControl x:Class="TodoApp.Views.TaskRowView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:TodoApp.Views" SizeChanged="Row_SizeChanged">
+ <Border x:Name="RowBorder" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="8,16" Background="Transparent">
+  <Grid x:Name="Layout">
+   <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+   <Grid.ColumnDefinitions><ColumnDefinition Width="32"/><ColumnDefinition x:Name="TitleColumn" Width="*"/><ColumnDefinition x:Name="DateColumn" Width="136"/><ColumnDefinition x:Name="PriorityColumn" Width="76"/><ColumnDefinition Width="32"/></Grid.ColumnDefinitions>
+   <CheckBox Grid.RowSpan="2" VerticalAlignment="Top" Margin="0,4,0,0" Style="{StaticResource TaskCheck}" IsChecked="{Binding IsCompleted,Mode=OneWay}" Command="{Binding DataContext.ToggleCompleteCommand,RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" ToolTip="{local:T 'Selesai / buka kembali'}"/>
+   <StackPanel Grid.Column="1" Margin="0,0,12,0">
+    <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource ForegroundBrush}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Title}"><TextBlock.Style><Style TargetType="TextBlock"><Style.Triggers><DataTrigger Binding="{Binding IsCompleted}" Value="True"><Setter Property="TextDecorations" Value="Strikethrough"/><Setter Property="Opacity" Value="0.6"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+    <TextBlock Text="{Binding Notes}" Foreground="{StaticResource ForegroundDimBrush}" FontSize="12" TextTrimming="CharacterEllipsis" Margin="0,5,0,0" ToolTip="{Binding Notes}"><TextBlock.Style><Style TargetType="TextBlock"><Style.Triggers><DataTrigger Binding="{Binding Notes}" Value=""><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+    <TextBlock Text="{Binding StatusLabel}" Foreground="{StaticResource AccentBrush}" FontSize="11" Margin="0,4,0,0"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding Status}" Value="In Progress"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+   </StackPanel>
+   <StackPanel x:Name="DatePanel" Grid.Column="2" Margin="0,0,8,0">
+    <TextBlock Text="{Binding DateLabel}" FontSize="11" Foreground="{StaticResource ForegroundBrush}"/>
+    <WrapPanel Margin="0,5,0,0"><TextBlock Text="{Binding TimeLabel}" Foreground="{StaticResource ForegroundDimBrush}" FontSize="11"/><TextBlock Text="{local:T ' · Terlambat'}" Foreground="{StaticResource PriorityHeavyBrush}" FontSize="11" Visibility="{Binding IsOverdue,Converter={StaticResource BoolToVis}}"/></WrapPanel>
+   </StackPanel>
+   <Border x:Name="Badge" Grid.Column="3" Background="{StaticResource SurfaceLightBrush}" CornerRadius="10" Padding="8,4" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="{Binding PriorityModeLabel}"><TextBlock Text="{Binding EffectivePriority}" FontSize="10" FontWeight="SemiBold"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Foreground" Value="{StaticResource PriorityHeavyBrush}"/><Style.Triggers><DataTrigger Binding="{Binding EffectivePriority}" Value="Medium"><Setter Property="Foreground" Value="{StaticResource PriorityMediumBrush}"/></DataTrigger><DataTrigger Binding="{Binding EffectivePriority}" Value="Light"><Setter Property="Foreground" Value="{StaticResource PriorityLightBrush}"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock></Border>
+   <Button Grid.Column="4" Grid.RowSpan="2" Style="{StaticResource QuietButton}" Content="&#xE712;" FontFamily="Segoe MDL2 Assets" FontSize="14" Padding="0" Height="30" Width="30" VerticalAlignment="Top" Click="More_Click" ToolTip="{local:T 'Opsi tugas'}" AutomationProperties.Name="{local:T 'Opsi tugas'}">
+    <Button.ContextMenu><ContextMenu Style="{StaticResource TaskContextMenu}">
+     <MenuItem Header="{local:T 'Ubah tugas'}" Tag="edit" Click="Action_Click"/>
+     <MenuItem Header="{local:T 'Mulai kerjakan'}" Tag="start" Click="Action_Click"/>
+     <MenuItem Header="{local:T 'Selesai / buka kembali'}" Tag="complete" Click="Action_Click"/>
+     <MenuItem Header="{local:T 'Hapus tugas'}" Foreground="{StaticResource PriorityHeavyBrush}" Tag="delete" Click="Action_Click"/>
+    </ContextMenu></Button.ContextMenu>
+   </Button>
+  </Grid>
+ </Border>
+</UserControl>

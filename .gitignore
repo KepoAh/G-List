@@ -1,0 +1,49 @@
+# .NET / WPF build output
+**/bin/
+**/obj/
+artifacts/
+[Tt]est[Rr]esults/
+smoke-results/
+.audit/
+local-data/
+
+# IDE and user-specific settings
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Local databases, backups and logs
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.migrating
+*.bak
+*.log
+
+# Secrets and machine-local configuration
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+
+# Installers and generated binaries
+*.exe
+*.dll
+*.pdb
+*.msi
+*.zip
+
+# Custom personal audio; retain only the bundled placeholder
+*.mp3
+!TodoApp/Assets/default_alarm.mp3
+
+# OS metadata
+Thumbs.db
+Desktop.ini
+.DS_Store

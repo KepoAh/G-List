@@ -1,0 +1,60 @@
+<UserControl x:Class="TodoApp.Views.ScheduleView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:TodoApp.Views" SizeChanged="View_SizeChanged">
+ <UserControl.Resources>
+  <Style x:Key="ScheduleCard" TargetType="Border"><Setter Property="Background" Value="{StaticResource SurfaceBrush}"/><Setter Property="CornerRadius" Value="12"/><Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="Padding" Value="18"/><Setter Property="Margin" Value="0,0,12,14"/></Style>
+  <Style x:Key="DayButton" TargetType="Button" BasedOn="{StaticResource PremiumButton}"><Setter Property="Padding" Value="12,9"/><Setter Property="Margin" Value="0,0,6,6"/><Style.Triggers><DataTrigger Binding="{Binding IsSelected}" Value="True"><Setter Property="Background" Value="{StaticResource AccentSurface}"/><Setter Property="Foreground" Value="{StaticResource AccentBrush}"/><Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/></DataTrigger></Style.Triggers></Style>
+ </UserControl.Resources>
+ <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+  <StackPanel>
+   <TextBlock Text="{local:T 'Pilih hari'}" FontSize="17" FontWeight="SemiBold" Margin="0,0,0,12"/>
+   <ItemsControl ItemsSource="{Binding Days}"><ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+    <ItemsControl.ItemTemplate><DataTemplate><Button Style="{StaticResource DayButton}" Content="{Binding Label}" Command="{Binding DataContext.SelectDayCommand,RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Value}"/></DataTemplate></ItemsControl.ItemTemplate>
+   </ItemsControl>
+   <TextBlock Text="{local:T 'Pilih hari untuk melihat kegiatan dan menambahkan jadwal mingguan.'}" Foreground="{StaticResource ForegroundDimBrush}" TextWrapping="Wrap" Margin="0,8,0,20"/>
+   <Grid x:Name="DayContent" Visibility="{Binding HasDay,Converter={StaticResource BoolToVis}}">
+    <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <Border x:Name="ListCard" Style="{StaticResource ScheduleCard}" VerticalAlignment="Top">
+     <StackPanel>
+      <TextBlock Text="{Binding SelectedDayLabel}" FontSize="20" FontWeight="SemiBold"/>
+      <TextBlock Text="{local:T 'Kegiatan rutin'}" Style="{StaticResource Caption}" Margin="0,6,0,16"/>
+      <TextBlock Text="{local:T 'Belum ada jadwal untuk hari ini.'}" Foreground="{StaticResource ForegroundDimBrush}" TextWrapping="Wrap" Visibility="{Binding IsEmpty,Converter={StaticResource BoolToVis}}"/>
+      <ItemsControl ItemsSource="{Binding Items}"><ItemsControl.ItemTemplate><DataTemplate>
+       <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,14"><StackPanel>
+        <TextBlock Text="{Binding TimeRange}" Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold"/>
+        <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,6"/>
+        <TextBlock Text="{Binding Notes}" Foreground="{StaticResource ForegroundDimBrush}" TextWrapping="Wrap" MaxHeight="54" FontSize="12"/>
+        <TextBlock Text="{Binding RangeLabel}" Foreground="{StaticResource ForegroundDimBrush}" TextWrapping="Wrap" FontSize="11" Margin="0,8"/>
+        <WrapPanel><Button Style="{StaticResource QuietButton}" Content="{local:T 'Ubah jadwal'}" Command="{Binding DataContext.EditCommand,RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/><Button Style="{StaticResource QuietButton}" Content="{local:T 'Akhiri jadwal'}" Foreground="{StaticResource PriorityHeavyBrush}" Command="{Binding DataContext.ArchiveCommand,RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/></WrapPanel>
+       </StackPanel></Border>
+      </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+     </StackPanel>
+    </Border>
+    <Border x:Name="FormCard" Grid.Column="1" Style="{StaticResource ScheduleCard}" VerticalAlignment="Top">
+     <StackPanel>
+      <TextBlock Text="{Binding FormTitle}" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,16"/>
+      <TextBlock Text="{local:T 'Nama kegiatan'}" Style="{StaticResource Caption}"/>
+      <TextBox Style="{StaticResource PremiumTextBox}" Text="{Binding Title,UpdateSourceTrigger=PropertyChanged}" MaxLength="180" Margin="0,0,0,12"/>
+      <TextBlock Text="{local:T 'Deskripsi (opsional)'}" Style="{StaticResource Caption}"/>
+      <TextBox Style="{StaticResource PremiumTextBox}" Text="{Binding Notes,UpdateSourceTrigger=PropertyChanged}" MaxLength="5000" AcceptsReturn="True" TextWrapping="Wrap" Height="72" VerticalScrollBarVisibility="Auto" Margin="0,0,0,12"/>
+      <TextBlock Text="{local:T 'Waktu pengingat'}" Style="{StaticResource Caption}"/>
+      <ComboBox Style="{StaticResource PremiumComboBox}" ItemsSource="{Binding ReminderOptions}" DisplayMemberPath="Label" SelectedValuePath="Minutes" SelectedValue="{Binding ReminderMinutes}"/>
+      <TextBlock Text="{local:T 'Pengingat dihitung sebelum jam mulai kegiatan.'}" Foreground="{StaticResource ForegroundDimBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,5,0,14"/>
+      <Grid Margin="0,0,0,14"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+       <StackPanel Margin="0,0,8,0"><TextBlock Text="{local:T 'Jam mulai'}" Style="{StaticResource Caption}"/><TextBox Style="{StaticResource PremiumTextBox}" Text="{Binding StartTime,UpdateSourceTrigger=PropertyChanged}" MaxLength="5" Tag="08:00"/></StackPanel>
+       <StackPanel Grid.Column="1"><TextBlock Text="{local:T 'Jam selesai'}" Style="{StaticResource Caption}"/><TextBox Style="{StaticResource PremiumTextBox}" Text="{Binding EndTime,UpdateSourceTrigger=PropertyChanged}" MaxLength="5" Tag="09:00"/></StackPanel>
+      </Grid>
+      <TextBlock Text="{local:T 'Rentang tanggal (opsional)'}" Style="{StaticResource Caption}"/>
+      <TextBlock Text="{local:T 'Kosongkan untuk berulang setiap minggu tanpa batas akhir.'}" Foreground="{StaticResource ForegroundDimBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
+      <TextBlock Text="{local:T 'Dari tanggal'}" Style="{StaticResource Caption}"/>
+      <DatePicker Style="{StaticResource PremiumDatePicker}" SelectedDate="{Binding StartDate}" Language="id-ID" Margin="0,0,0,8"/>
+      <TextBlock Text="{local:T 'Sampai tanggal'}" Style="{StaticResource Caption}"/>
+      <DatePicker Style="{StaticResource PremiumDatePicker}" SelectedDate="{Binding EndDate}" Language="id-ID"/>
+      <Button Style="{StaticResource QuietButton}" Content="{local:T 'Kosongkan tanggal'}" Command="{Binding ClearDatesCommand}" HorizontalAlignment="Left" Margin="0,4,0,8"/>
+      <TextBlock Text="{Binding Error}" Foreground="{StaticResource PriorityHeavyBrush}" TextWrapping="Wrap" Margin="0,0,0,12"/>
+      <WrapPanel HorizontalAlignment="Right"><Button Style="{StaticResource QuietButton}" Content="{local:T 'Batal'}" Command="{Binding CancelCommand}" Margin="0,0,8,8"/><Button Style="{StaticResource AccentButton}" Content="{Binding FormTitle}" Command="{Binding SaveCommand}" Margin="0,0,0,8"/></WrapPanel>
+     </StackPanel>
+    </Border>
+   </Grid>
+  </StackPanel>
+ </ScrollViewer>
+</UserControl>

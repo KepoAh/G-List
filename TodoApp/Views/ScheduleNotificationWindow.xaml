@@ -1,0 +1,14 @@
+<Window x:Class="TodoApp.Views.ScheduleNotificationWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:TodoApp.Views"
+ Title="G-list — Schedule" Width="430" Height="310" WindowStyle="None" AllowsTransparency="True" Background="Transparent" Topmost="True" ResizeMode="NoResize" WindowStartupLocation="Manual">
+ <Border Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource AccentBrush}" BorderThickness="1" CornerRadius="16" Padding="20" TextElement.Foreground="{StaticResource ForegroundBrush}">
+  <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+   <Grid Margin="0,0,0,14"><TextBlock Text="{local:T 'G-list · Pengingat Schedule'}" Foreground="{StaticResource AccentBrush}" VerticalAlignment="Center"/><StackPanel Orientation="Horizontal" HorizontalAlignment="Right"><Button Style="{StaticResource QuietButton}" Content="&#xE767;" FontFamily="Segoe MDL2 Assets" ToolTip="{local:T 'Senyapkan'}" Click="Mute_Click"/><Button Style="{StaticResource QuietButton}" Content="&#xE711;" FontFamily="Segoe MDL2 Assets" ToolTip="{local:T 'Tutup'}" Click="Close_Click"/></StackPanel></Grid>
+   <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"><StackPanel>
+    <TextBlock Text="{Binding Title}" FontSize="21" FontWeight="SemiBold" TextWrapping="Wrap"/>
+    <TextBlock Text="{Binding WhenLabel}" Foreground="{StaticResource AccentBrush}" FontSize="12" Margin="0,10" TextWrapping="Wrap"/>
+    <TextBlock Text="{Binding Notes}" Foreground="{StaticResource ForegroundDimBrush}" TextWrapping="Wrap" FontSize="12"/>
+   </StackPanel></ScrollViewer>
+   <Button Grid.Row="2" Style="{StaticResource AccentButton}" Content="{local:T 'Mengerti'}" Click="Close_Click" Margin="0,16,0,0"/>
+  </Grid>
+ </Border>
+</Window>
